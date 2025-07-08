@@ -5,7 +5,7 @@ Un proyecto backend robusto desarrollado en Go que proporciona una API RESTful c
 ## 👨‍💻 Desarrollador
 
 <div align="center">
-  <img src="https://media.licdn.com/dms/image/C4E03AQFQqQqQqQqQqQ/profile-displayphoto-shrink_800_800/0/1516251234567?e=2147483647&v=beta&t=YOUR_LINKEDIN_IMAGE_ID" alt="Cesar Bejarano" width="150" style="border-radius: 50%;">
+  <img src="https://media.licdn.com/dms/image/v2/D4E03AQHTsTzH2fM2iw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1718281288427?e=1757548800&v=beta&t=RFeU9SYo_SwcVVwuIQaYghk8Lx0yKtxMmpfsnGEjWU4" alt="Cesar Bejarano" width="150" style="border-radius: 50%;">
   
   ### Cesar Bejarano
   **Desarrollador de software**
@@ -27,7 +27,6 @@ Un proyecto backend robusto desarrollado en Go que proporciona una API RESTful c
 - [Uso](#-uso)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [API Endpoints](#-api-endpoints)
-- [Licencia](#-licencia)
 
 ## ✨ Características
 
@@ -59,7 +58,7 @@ Un proyecto backend robusto desarrollado en Go que proporciona una API RESTful c
 
 1. **Clonar el repositorio**
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/C3S4RBP/recruitmentChallenge.git
    cd recruitmentChallenge/Backend
    ```
 
@@ -142,12 +141,6 @@ Backend/
 |--------|----------|-------------|--------|
 | `GET` | `/health` | Verificar estado del servidor | 🚧 En desarrollo |
 
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
----
 
 <div align="center">
   <p>Desarrollado con ❤️ por <strong>Cesar Bejarano</strong></p>
