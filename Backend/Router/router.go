@@ -8,6 +8,7 @@ import (
 
 func SetupRoutes() {
 	http.HandleFunc("/sync-stocks", handleMethod(http.MethodPost, API_EXTERNAL.SyncStocksHandler))
+	http.HandleFunc("/stocks", handleMethod(http.MethodGet, API_EXTERNAL.GetStocksHandler))
 	http.HandleFunc("/health", handleMethod(http.MethodGet, health.HealthHandler))
 }
 

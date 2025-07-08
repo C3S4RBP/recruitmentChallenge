@@ -27,8 +27,6 @@ Un proyecto backend robusto desarrollado en Go que proporciona una API RESTful c
 - [Uso](#-uso)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [API Endpoints](#-api-endpoints)
-- [Base de Datos](#-base-de-datos)
-- [Funcionalidades Implementadas](#-funcionalidades-implementadas)
 - [Troubleshooting](#-troubleshooting)
 
 ## ✨ Características
@@ -174,121 +172,11 @@ Backend/
 
 | Método | Endpoint | Descripción | Estado |
 |--------|----------|-------------|--------|
+ `GET` | `/health` | Verificar estado del servidor | ✅ Implementado |
 | `POST` | `/sync-stocks` | Sincronizar stocks desde API externa | ✅ Implementado |
-| `GET` | `/health` | Verificar estado del servidor | ✅ Implementado |
+| `GET` | `/stocks` | Obtener listado de stocks | ✅ Implementado |
+|
 
-### Detalles de los Endpoints
-
-#### `POST /sync-stocks`
-Sincroniza todos los datos de stocks desde la API externa y los almacena en la base de datos.
-
-**Características:**
-- Consume API externa con autenticación Bearer
-- Descarga completa de datos con paginación
-- Transformación automática de datos
-- Almacenamiento optimizado con UPSERT
-- Manejo de errores robusto
-
-**Respuesta exitosa (200):**
-```json
-{
-  "Cant": 1500,
-  "Estado": 200
-}
-```
-
-**Posibles errores:**
-- `400` - Error en la petición
-- `401` - No autorizado
-- `500` - Error interno del servidor
-- `502` - Error de la API externa
-- `204` - No hay datos disponibles
-
-#### `GET /health`
-Verifica el estado del servidor, conexión a la base de datos y variables de entorno.
-
-**Respuesta exitosa (200):**
-```json
-{
-  "status": "healthy",
-  "timestamp": "2024-01-01T12:00:00Z",
-  "services": {
-    "database": "connected",
-    "environment": "ok"
-  },
-  "uptime": "2h30m15s"
-}
-```
-
-**Estados posibles:**
-- `healthy` - Todo funcionando correctamente
-- `degraded` - Algunos servicios con problemas menores
-- `unhealthy` - Servicios críticos no disponibles
-
-## 🗄️ Base de Datos
-
-### Modelo de Datos
-
-```sql
-CREATE TABLE stocks (
-    ticker VARCHAR(255) PRIMARY KEY,
-    target_from VARCHAR(255),
-    target_to VARCHAR(255),
-    company VARCHAR(255),
-    action VARCHAR(255),
-    brokerage VARCHAR(255),
-    rating_from VARCHAR(255),
-    rating_to VARCHAR(255),
-    time VARCHAR(255),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
-```
-
-### Migraciones Automáticas
-
-El sistema ejecuta automáticamente:
-1. Creación de tablas con GORM
-2. Análisis y vacío de tablas (VACUUM ANALYZE)
-
-## 🚀 Funcionalidades Implementadas
-
-### 1. **Sincronización de API Externa**
-- ✅ Consumo de API externa con autenticación Bearer
-- ✅ Descarga completa de datos con paginación automática
-- ✅ Transformación de datos al modelo interno
-- ✅ Almacenamiento en base de datos con UPSERT optimizado
-- ✅ Manejo robusto de errores y timeouts
-- ✅ Procesamiento en lotes para mejor rendimiento
-
-### 2. **Arquitectura Modular**
-- ✅ Separación de responsabilidades (Model, Repository, Handler)
-- ✅ Patrón Repository para operaciones de base de datos
-- ✅ DTOs para transferencia de datos
-- ✅ Router centralizado con validación de métodos HTTP
-- ✅ Módulos independientes y reutilizables
-
-### 3. **Base de Datos Avanzada**
-- ✅ Configuración con GORM y PostgreSQL
-- ✅ Modelos con validaciones y relaciones
-- ✅ Operaciones CRUD completas
-- ✅ Transacciones para operaciones en lote
-- ✅ Migración automática de esquemas
-
-### 4. **Manejo de Errores Robusto**
-- ✅ Validación de variables de entorno
-- ✅ Manejo de errores de API externa
-- ✅ Errores de base de datos
-- ✅ Respuestas HTTP apropiadas
-- ✅ Logs informativos en consola
-- ✅ Timeouts configurables
-
-### 5. **Configuración y Despliegue**
-- ✅ Variables de entorno con godotenv
-- ✅ Configuración flexible de puertos
-- ✅ Health check avanzado con monitoreo de servicios
-- ✅ Logs informativos en consola
-- ✅ Configuración por entorno (DEV/PRD)
 
 ## 🔧 Comandos Útiles
 

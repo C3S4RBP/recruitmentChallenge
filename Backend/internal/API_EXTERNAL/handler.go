@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -108,5 +109,77 @@ func getStosks(w http.ResponseWriter, r *http.Request, q string) {
 
 	if apiResp.NextPage != "" {
 		getStosks(w, r, apiResp.NextPage)
+	}
+}
+
+func GetStocksHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	page := 1
+	pageSize := 10
+	company := ""
+
+	if pageStr := r.URL.Query().Get("page"); pageStr != "" {
+		if p, err := strconv.Atoi(pageStr); err == nil && p > 0 {
+			page = p
+		}
+	}
+
+	if pageSizeStr := r.URL.Query().Get("page_size"); pageSizeStr != "" {
+		if ps, err := strconv.Atoi(pageSizeStr); err == nil && ps > 0 && ps <= 100 {
+			pageSize = ps
+		}
+	}
+
+	if companyParam := r.URL.Query().Get("company"); companyParam != "" {
+		company = companyParam
+	}
+
+	offset := (page - 1) * pageSize
+
+	repo := NewStockRepository()
+
+	var stocks []Stock
+	var total int64
+	var err error
+
+	if company != "" {
+		stocks, err = repo.GetStocksByTicker(company, pageSize, offset)
+		if err != nil {
+			http.Error(w, "Error consultando stocks por company: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		total, err = repo.GetStocksCountByTicker(company)
+		if err != nil {
+			http.Error(w, "Error obteniendo conteo de stocks: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		stocks, err = repo.GetAllStocks(pageSize, offset)
+		if err != nil {
+			http.Error(w, "Error consultando stocks: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		total, err = repo.GetTotalStocksCount()
+		if err != nil {
+			http.Error(w, "Error obteniendo conteo total de stocks: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	totalPages := int((total + int64(pageSize) - 1) / int64(pageSize))
+
+	response := PaginatedStocksResponse{
+		Stocks:     stocks,
+		Total:      total,
+		Page:       page,
+		PageSize:   pageSize,
+		TotalPages: totalPages,
+	}
+
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, "Error serializando respuesta", http.StatusInternalServerError)
+		return
 	}
 }

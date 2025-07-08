@@ -55,7 +55,6 @@ func (r *StockRepository) BatchCreateOrUpdateStocks(stocks []Stock) error {
 		}
 	}
 
-	// Ejecutar operaciones en lotes
 	if len(toCreate) > 0 {
 		batchSize := 100
 		for i := 0; i < len(toCreate); i += batchSize {
@@ -89,7 +88,7 @@ func (r *StockRepository) BatchCreateOrUpdateStocks(stocks []Stock) error {
 	return nil
 }
 
-// para procesos masivos se puede usar este metodousando UPSERT de PostgreSQL
+//UPSERT
 func (r *StockRepository) BatchUpsertStocks(stocks []Stock) error {
 	if len(stocks) == 0 {
 		return errors.New("la lista de stocks está vacía")
@@ -113,7 +112,6 @@ func (r *StockRepository) BatchUpsertStocks(stocks []Stock) error {
 	return nil
 }
 
-// GetAllStocks obtiene todos los stocks de la base de datos
 func (r *StockRepository) GetAllStocks(limit, offset int) ([]Stock, error) {
 	var stocks []Stock
 	query := r.db.Order("ticker ASC")
@@ -127,4 +125,31 @@ func (r *StockRepository) GetAllStocks(limit, offset int) ([]Stock, error) {
 
 	err := query.Find(&stocks).Error
 	return stocks, err
+}
+
+func (r *StockRepository) GetStocksByTicker(company string, limit, offset int) ([]Stock, error) {
+	var stocks []Stock
+	query := r.db.Where("Company ILIKE ?", "%"+company+"%").Order("Company ASC")
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+	if offset > 0 {
+		query = query.Offset(offset)
+	}
+
+	err := query.Find(&stocks).Error
+	return stocks, err
+}
+
+func (r *StockRepository) GetTotalStocksCount() (int64, error) {
+	var count int64
+	err := r.db.Model(&Stock{}).Count(&count).Error
+	return count, err
+}
+
+func (r *StockRepository) GetStocksCountByTicker(company string) (int64, error) {
+	var count int64
+	err := r.db.Model(&Stock{}).Where("Company ILIKE ?", "%"+company+"%").Count(&count).Error
+	return count, err
 }
